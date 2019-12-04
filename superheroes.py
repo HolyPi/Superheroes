@@ -25,6 +25,13 @@ class Armor:
     def block(self):
         random_value = random.randint(0,self.max_block)
         return random_value
+class Weapon(Ability):
+    def attack(self):
+        """  This method returns a random value
+        between one half to the full attack power of the weapon.
+        """
+        strength = random.randint(self.max_damage //2, self.max_damage)
+        return strength
 
 class Hero:
     def __init__(self, name, starting_health=100):
@@ -64,6 +71,11 @@ class Hero:
         '''Updates self.current_health to reflect the damage minus the defense.'''
         defense = self.defend()
         self.current_health -= damage - defense
+
+    def add_weapon(self, weapon):
+        '''Add weapon to self.abilities'''
+        self.abilities.append(weapon)
+
     def is_alive(self):
         '''Determines if heroes are alive'''
 
@@ -92,13 +104,38 @@ class Hero:
                     print(f'{self.name} won!')
                     # self.kills += 1
                     # opponent.deaths += 1
-  # TODO: Fight each hero until a victor emerges.
-  # Phases to implement:
-  # 0) check if at least one hero has abilities. If no hero has abilities, print "Draw"
-  # 1) else, start the fighting loop until a hero has won
-  # 2) the hero (self) and their opponent must attack each other and each must take damage from the other's attack
-  # 3) After each attack, check if either the hero (self) or the opponent is alive
-  # 4) if one of them has died, print "HeroName won!" replacing HeroName with the name of the hero, and end the fight loop
+class Team:
+    def __init__(self, name):
+        ''' Initialize your team with its team name and an empty list of heroes
+        '''
+        self.name = name
+        self.heroes = list()
+
+    def remove_hero(self, name):
+        '''Remove hero from heroes list.
+        If Hero isn't found return 0.
+        '''
+        foundHero = False
+        for hero in self.heroes:
+            if hero.name == name:
+                self.heroes.remove(hero)
+                foundHero = True
+        if not foundHero:
+            return 0
+
+    def view_all_heroes(self):
+        '''Prints out all heroes to the console.'''
+        for hero in self.heroes:
+            print(hero.name)
+
+    def add_hero(self, hero):
+        '''Add Hero object to self.heroes.'''
+        self.heroes.append(hero)
+
+
+
+
+
 
 
 if __name__ == "__main__":
@@ -117,14 +154,8 @@ if __name__ == "__main__":
     # my_hero.add_ability(ability)
     # print(my_hero.abilities)
 
-    hero1 = Hero("Wonder Woman")
-    hero2 = Hero("Dumbledore")
-    ability1 = Ability("Super Speed", 300)
-    ability2 = Ability("Super Eyes", 130)
-    ability3 = Ability("Wizard Wand", 80)
-    ability4 = Ability("Wizard Beard", 20)
-    hero1.add_ability(ability1)
-    hero1.add_ability(ability2)
-    hero2.add_ability(ability3)
-    hero2.add_ability(ability4)
-    hero1.fight(hero2)
+
+    hero = Hero("Wonder Woman")
+    weapon = Weapon("Lasso of Truth", 90)
+    hero.add_weapon(weapon)
+    print(hero.attack())
