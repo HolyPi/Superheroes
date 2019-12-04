@@ -40,6 +40,8 @@ class Hero:
         self.name = name
         self.starting_health = starting_health
         self.current_health = starting_health
+        self.deaths = 0
+        self.kills = 0
 
     def add_ability(self, ability):
         '''Add ability to abilities list'''
@@ -48,6 +50,7 @@ class Hero:
         '''Add armor to self.armors
             Armor: Armor Object'''
         self.armors.append(armor)
+
 
     def attack(self):
         '''Calculate the total damage from all ability attacks.'''
@@ -84,6 +87,14 @@ class Hero:
         else:
             return True
 
+    def add_kill(self, num_kills):
+        ''' Update self.kills by num_kills amount'''
+        self.kills += num_kills
+
+    def add_death(self, num_deaths):
+        ''' Update deaths with num_deaths'''
+        self.deaths += num_deaths
+
     def fight(self, opponent):
 
         if self.abilities == [] and opponent.abilities == []:
@@ -97,13 +108,13 @@ class Hero:
                 if self.is_alive() == False:
                     "Determines if opponent wins"
                     print(f'{opponent.name}) won!')
-                    # self.deaths += 1
-                    # opponent.kills += 1
+                    self.deaths += 1
+                    opponent.kills += 1
                 elif opponent.is_alive() == False:
                     "Determines if hero won"
                     print(f'{self.name} won!')
-                    # self.kills += 1
-                    # opponent.deaths += 1
+                    self.kills += 1
+                    opponent.deaths += 1
 class Team:
     def __init__(self, name):
         ''' Initialize your team with its team name and an empty list of heroes
@@ -132,9 +143,54 @@ class Team:
         '''Add Hero object to self.heroes.'''
         self.heroes.append(hero)
 
+    def attack(self, other_team):
+        ''' Battle each team against each other.'''
+
+        living_heroes = list()
+        living_opponents = list()
+
+        for hero in self.heroes:
+            living_heroes.append(hero)
+
+        for hero in other_team.heroes:
+            living_opponents.append(hero)
+
+        while len(living_heroes) > 0 and len(living_opponents)> 0:
+
+            random_hero = random.choice(living_heroes)
+            random_opponent = random.choice(living_opponents)
+
+            random_hero.fight(random_opponent)
+
+            if random_hero.is_alive() and random_opponent.is_alive == False:
+                living_opponents.remove(random_opponent)
+            else:
+                if random_opponent.is_alive() and random_hero.is_alive == False:
+                    living_heroes.remove(random_hero)
 
 
 
+    def stats(self):
+        '''Print team statistics'''
+        for hero in self.heroes:
+            kd = hero.kills / hero.deaths
+            print("{} Kill/Deaths:{}".format(hero.name,kd))
+
+    def revive_heroes(self):
+        ''' Reset all heroes health to starting_health'''
+        for hero in self.heroes:
+                hero.current_health = hero.starting_health
+
+
+
+class Arena:
+    def __init__(self):
+        '''Instantiate properties
+            team_one: None
+            team_two: None
+        '''
+        # TODO: create instance variables named team_one and team_two that
+        # will hold our teams.
 
 
 
